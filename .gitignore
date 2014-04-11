@@ -1,0 +1,25 @@
+# TeX generated files
+*.aux
+*.dvi
+*.toc
+*.pdf
+*.lot
+*.lof
+*.out
+*.bbl
+*.blg
+*.idx
+*.ilg
+*.ind
+*.lol
+
+# Logs
+*.log
+
+# auto generated style
+auto/
+
+# latexmk
+*.fdb_latexmk
+*.fls
+

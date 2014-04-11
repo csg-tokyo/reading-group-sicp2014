@@ -1,0 +1,16 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{sicpsetup}
+  [2014/04/11 v0.01 Setup for SCIP summary]
+
+\RequirePackage{kvoptions}
+\DeclareBoolOption{print}
+\ProcessKeyvalOptions*
+
+% color setup
+\ifsicpsetup@print
+  \RequirePackage[print]{listingsetup}
+\else
+  \RequirePackage{listingsetup}
+\fi
+
+\RequirePackage{japanese_settings}

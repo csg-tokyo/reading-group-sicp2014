@@ -1,0 +1,57 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{listingsetup}
+  [2012/04/18 v0.01 LaTeX package to format listings]
+
+\DeclareBoolOption{print}
+\ProcessKeyvalOptions*
+
+\RequirePackage{listings}
+\RequirePackage{fontspec}
+\RequirePackage{courier}
+
+
+\lstset{%
+  language=C,
+  basicstyle=\ttfamily,
+  numbers=left,
+  numberstyle=\tiny,
+  numbersep=5pt,
+  stepnumber=5,
+  numberblanklines=false,
+  tabsize=2,
+  extendedchars=true,
+  breaklines=true,
+  frame=single,
+  frameround=tttt,
+  showspaces=false,
+  showtabs=false,
+  xleftmargin=17pt,
+  framexleftmargin=17pt,
+  framexrightmargin=5pt,
+  framexbottommargin=4pt,
+  showstringspaces=false,
+  captionpos=b,
+}
+
+\iflistingsetup@print
+\RequirePackage[usenames,dvipsnames,svgnames,table,monochrome]{xcolor}
+\lstset{%
+  keywordstyle=[1]\ttfamily\bfseries,
+  keywordstyle=[4]\ttfamily\mdseries,
+  stringstyle=\rmfamily,
+  commentstyle=\rmfamily,
+}
+\else
+\RequirePackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\definecolor{lightgray}{RGB}{235,235,235}
+\lstset{%
+  keywordstyle=[1]\color{RoyalPurple}\ttfamily\bfseries,
+  keywordstyle=[2]\color{Fuchsia}\ttfamily,
+  keywordstyle=[3]\color{RoyalBlue}\ttfamily,
+  keywordstyle=[4]\ttfamily\mdseries,
+  stringstyle=\color{Bittersweet}\rmfamily,
+  commentstyle=\color{Brown}\rmfamily,
+  backgroundcolor=\color{lightgray},
+}
+\fi
+
