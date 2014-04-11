@@ -1,0 +1,23 @@
+\subsubsection{引数としてのプロシージャー}
+まず以下の2つの例について考える.
+
+\begin{align*}
+  f(a, b) &= \sum_{n = a}^{b} n    &\text{$a$から$b$までの整数の和}\\
+  f(a, b) &= \sum_{n = a}^{b} n^3  &\text{$a$から$b$までの整数の立方数の和}
+\end{align*}
+
+この２つの例をそのままSchemeで書くと,
+
+\begin{lstlisting}[basicstyle=\footnotesize,title=$a$から$b$までの整数の和]
+(define (sum-integers a b)
+  (if (> a b)
+      0
+      (+ a (sum-integers (+ a 1) b))))
+\end{lstlisting}
+
+\begin{lstlisting}[basicstyle=\footnotesize,title=$a$から$b$までの整数の立方数の和]
+(define (sum-cubes a b)
+  (if (> a b)
+      0
+      (+ (cube a) (sum-cubes (+ a 1) b))))
+\end{lstlisting}
