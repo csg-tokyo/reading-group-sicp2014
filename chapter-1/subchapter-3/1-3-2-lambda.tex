@@ -11,3 +11,32 @@
        (lambda (x (+ x 4))
        b))
 \end{lstlisting}
+
+\paragraph{\lstinline{let}を用いたローカル変数の作成} \lstinline{lambda}は,
+ローカル変数を作るために用いることができる. 例えば$f(x,y) = (1-y)(1+2x) - (1-y)4x^2$を次のように定義できる.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (f x y)
+  ((lambda (a b)
+    (- (* b (+ 1 a)
+       (* b (* a a)))))
+   (* 2 x) (- 1 y)))
+\end{lstlisting}
+
+ローカル変数を宣言することが多いので, そのためのスペシャルフォーム\lstinline{let}が存在する.
+以上の例を\lstinline{let}を用いて書き直すと,
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (f x y)
+  (let ((a (* 2 x))
+        (b (- 1 y)))
+    (- (* b (+ 1 a)
+       (* b (* a a))))))
+\end{lstlisting}
+
+\lstinline{let}について, 以下の２つの点が重要である.
+
+\begin{itemize}
+\item 宣言される変数がローカルで, \lstinline{let}の外の環境に影響を与えない.
+\item \lstinline{let}を使った変数の宣言の式は\lstinline{let}の外の環境で評価される.
+\end{itemize}
