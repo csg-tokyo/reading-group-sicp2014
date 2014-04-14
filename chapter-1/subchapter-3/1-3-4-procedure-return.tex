@@ -1,0 +1,17 @@
+\setcounter{subsubsection}{3}
+\subsubsection{返り値としてのプロシージャー}
+プロシージャーは引数としてだけでなく, 返り値として用いることによって
+さらに表現できることを増やすことができる. 例えば, $f$関数があったとすると,
+$x$と$f(x)$の平均を求める関数を以下のように定義できる.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (average-damp f)
+  (lambda (x) (average x (f x))))
+\end{lstlisting}
+\noindent
+２乗を行う関数について
+\lstinline[basicstyle=\footnotesize]{((average-damp square) 10) => 55}
+のように用いることができる.
+
+このように関数を返すような関数を用いることによって, 複雑な関数を簡単に作れるようになり,
+その関数をまた他の関数の引数などで使うことができる.
