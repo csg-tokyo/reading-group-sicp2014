@@ -1,23 +1,38 @@
 \subsubsection{引数としてのプロシージャー}
-まず以下の2つの例について考える.
-
-\begin{align*}
-  f(a, b) &= \sum_{n = a}^{b} n    &\text{$a$から$b$までの整数の和}\\
-  f(a, b) &= \sum_{n = a}^{b} n^3  &\text{$a$から$b$までの整数の立方数の和}
-\end{align*}
-
-この２つの例をそのままSchemeで書くと,
-
+以下の2つの例について考える.
+%
 \begin{lstlisting}[basicstyle=\footnotesize,title=$a$から$b$までの整数の和]
 (define (sum-integers a b)
   (if (> a b)
       0
       (+ a (sum-integers (+ a 1) b))))
 \end{lstlisting}
-
-\begin{lstlisting}[basicstyle=\footnotesize,title=$a$から$b$までの整数の立方数の和]
+%
+\begin{lstlisting}[basicstyle=\footnotesize,title=$\pi$の数列]
 (define (sum-cubes a b)
   (if (> a b)
       0
-      (+ (cube a) (sum-cubes (+ a 1) b))))
+      (+ (/ 1.0 (* a (+ a 2))) (pi-sum (+ a 4) b))))
+\end{lstlisting}
+
+１つ目の例は$a$から$b$までの整数の和を求める. ２つの目の例はパイに収束する.
+
+以上の２つの例が非常に似ていおり, 変わるのは足される値と次の値を求める部分のみである.
+関数を書く時にその部分を抽象化することによって, 関数の再利用性を上げることができる.
+その抽象化は次のように, 以上の２つの操作を引数にすることによって行うことができる.
+%
+\begin{lstlisting}[basicstyle=\footnotesize,title=一般的な和の関数]
+(define (sum term a next b)
+  (if (> a b)
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+\end{lstlisting}
+
+以上の関数を用いると, $a$から$b$までの整数の和を以下のように書きなおすことができる.
+
+\begin{lstlisting}[basicstyle=\footnotesize,title=一般的な和を用いた$a$から$b$までの整数]
+(define (inc n) (+ n 1))
+(define (identity x) x)
+(define (sum-integers a b) (sum identity a inc b))
 \end{lstlisting}
