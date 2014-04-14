@@ -20,7 +20,7 @@
 以上の２つの例が非常に似ていおり, 変わるのは足される値と次の値を求める部分のみである.
 関数を書く時にその部分を抽象化することによって, 関数の再利用性を上げることができる.
 その抽象化は次のように, 以上の２つの操作を引数にすることによって行うことができる.
-%
+\newpage
 \begin{lstlisting}[basicstyle=\footnotesize,title=一般的な和の関数]
 (define (sum term a next b)
   (if (> a b)
@@ -30,7 +30,7 @@
 \end{lstlisting}
 
 以上の関数を用いると, $a$から$b$までの整数の和を以下のように書きなおすことができる.
-
+%
 \begin{lstlisting}[basicstyle=\footnotesize,title=一般的な和を用いた$a$から$b$までの整数]
 (define (inc n) (+ n 1))
 (define (identity x) x)
