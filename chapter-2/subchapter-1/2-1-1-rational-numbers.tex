@@ -1,0 +1,36 @@
+\subsubsection{有理数での算術}
+有理数を使って四則演算を実装したいとする. 分数を表す方法がある前提で考えて,
+分子と分母から分数を返す\lstinline{make-rat}, 分数から分子を返す\lstinline{numer},
+分数から分母を返す\lstinline{denom}という３つのプロシージャーが存在するとする.
+
+分数の四則演算は
+
+\begin{align*}
+  &\frac{n_1}{d_1} + \frac{n_2}{d_2}  = \frac{n_1d_2 + n_2d_1}{d_1d_2}
+  & \frac{n_1}{d_1}\cdot \frac{n_2}{d_2} = \frac{n_1n_2}{d_1d_2}\\
+  &\frac{n_1}{d_1} - \frac{n_2}{d_2} = \frac{n_1d_2 - n_2d_1}{d_1d_2}
+  & \frac{n_1/d_2}{n_2/d_2} = \frac{n_1d_2}{d_1n_2}\\
+  &\frac{n_1}{d_1} = \frac{n_2}{d_2} \Leftrightarrow n_1d_2 = n_2d_1
+\end{align*}
+\noindent
+のように定義できるので, 以上の３つのプロシージャーがあれば, 問題なくそれぞれの
+演算を問題なく実装できる. 例えば, 足し算は以下のように実装できる.
+
+\begin{lstlisting}[basicstyle=\footnotesize,title=分数の足し算]
+(define (add-rat x y)
+  (make-rat (+ (* (numer x) (denom y))
+               (* (numer y) (denom x)))
+            (* (denom x) (denom y))))
+\end{lstlisting}
+\vspace{5mm}
+
+Lispにはペアというデータ構造が存在しており, ２つのデータを１つの構造として表現できる.
+\lstinline{cons}で２つの要素から１つのペアを作ることができ, \lstinline{car}で
+１つ目の要素を取り出し, \lstinline{cdr}で２つ目の要素を取り出す.
+ペアを用いると, 分数を自然に表現することができる.
+
+\begin{lstlisting}[basicstyle=\footnotesize,title=分数の表現]
+(define (make-rat n d) (cons n d))
+(define (numer x) (car x))
+(define (denom x) (cdr x))
+\end{lstlisting}
