@@ -8,16 +8,20 @@
       (+ a (sum-integers (+ a 1) b))))
 \end{lstlisting}
 %
-\begin{lstlisting}[basicstyle=\footnotesize,title=$\pi$の数列]
-(define (sum-cubes a b)
+\begin{lstlisting}[basicstyle=\footnotesize,title=$\pi/8$に収束する数列]
+(define (pi-sum a b)
   (if (> a b)
       0
       (+ (/ 1.0 (* a (+ a 2))) (pi-sum (+ a 4) b))))
 \end{lstlisting}
 
-１つ目の例は$a$から$b$までの整数の和を求める. ２つの目の例はパイに収束する.
+１つ目の例は$a$から$b$までの整数の和を求める. ２つの目の以下に述べる例は$\pi/8$収束する.
+\vskip -5mm
+\[
+  \frac{1}{1\cdot 3} + \frac{1}{5\cdot 7} + \frac{1}{9\cdot 11} + \cdots
+\]
 
-以上の２つの例が非常に似ていおり, 変わるのは足される値と次の値を求める部分のみである.
+以上の２つの例が非常に似ており, 変わるのは足される値と次の値を求める部分のみである.
 関数を書く時にその部分を抽象化することによって, 関数の再利用性を上げることができる.
 その抽象化は次のように, 以上の２つの操作を引数にすることによって行うことができる.
 \newpage

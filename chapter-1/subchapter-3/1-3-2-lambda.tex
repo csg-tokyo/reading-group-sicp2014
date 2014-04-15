@@ -2,9 +2,9 @@
 プロシージャをプロシージャに渡す時, 非常に単純なプロシージャを使うことが多い.
 従って, 毎回定義するよりプロシージャをその場で作成できた方が使いやすい.
 そうするために, 関数を返す\lstinline{lambda}というスペシャルフォームを用いることができる.
-\lstinline{lambda}を用いて$\pi$の数列を書き直すと,
+\lstinline{lambda}を用いて$\pi/8$に収束する数列を書き直すと,
 
-\begin{lstlisting}[basicstyle=\footnotesize,title=一般的な和の関数と\lstinline{lambda}を用いた$\pi$の数列]
+\begin{lstlisting}[basicstyle=\footnotesize,title=一般的な和の関数と\lstinline{lambda}を用いた$\pi/8$に収束する数列]
 (define (pi-sum a b)
   (sum (lambda (x) (/ 1.0 (* x (+ x 2))))
        a
