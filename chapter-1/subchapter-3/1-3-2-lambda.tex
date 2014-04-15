@@ -23,7 +23,9 @@
    (* 2 x) (- 1 y)))
 \end{lstlisting}
 
-ローカル変数を宣言することが多いので, そのためのスペシャルフォーム\lstinline{let}が存在する.
+\lstinline{lambda}を用いる場合, 作ったプロシージャに変数を渡すことでローカル変数を作る.
+ただし, ローカル変数を宣言することが多いので, より簡潔に定義できるためのスペシャルフォーム\lstinline{let}が存在する.
+\lstinline{let}の場合は変数に値を割り当てて, \lstinline{let}のスコープでのローカル変数となる.
 以上の例を\lstinline{let}を用いて書き直すと,
 
 \begin{lstlisting}[basicstyle=\footnotesize]
