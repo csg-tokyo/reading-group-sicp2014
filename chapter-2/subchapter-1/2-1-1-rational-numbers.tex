@@ -1,7 +1,7 @@
 \subsubsection{有理数での算術}
 有理数を使って四則演算を実装したいとする. 分数を表す方法がある前提で考えて,
 分子と分母から分数を返す\lstinline{make-rat}, 分数から分子を返す\lstinline{numer},
-分数から分母を返す\lstinline{denom}という３つのプロシージャーが存在するとする.
+分数から分母を返す\lstinline{denom}という３つのプロシージャが存在するとする.
 
 分数の四則演算は
 
@@ -13,7 +13,7 @@
   &\frac{n_1}{d_1} = \frac{n_2}{d_2} \Leftrightarrow n_1d_2 = n_2d_1
 \end{align*}
 \noindent
-のように定義できるので, 以上の３つのプロシージャーがあれば, 問題なくそれぞれの
+のように定義できるので, 以上の３つのプロシージャがあれば, 問題なくそれぞれの
 演算を問題なく実装できる. 例えば, 足し算は以下のように実装できる.
 
 \begin{lstlisting}[basicstyle=\footnotesize,title=分数の足し算]
