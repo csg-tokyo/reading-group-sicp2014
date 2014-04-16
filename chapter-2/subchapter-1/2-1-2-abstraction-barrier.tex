@@ -1,10 +1,10 @@
 \subsubsection{抽象化の壁}
 データを扱う時、複数の抽象化のレイヤに分けることが出来る.
 分数の例で考えると, 以下の図のようなレイヤが考えられる.
-\vskip -0.6cm
-\begin{figure}[h]
+\begin{figure}[ht]
   \centering
   \includegraphics[width=8cm,height=6cm]{imgs/abstraction-barrier.png}
+  \caption{\label{fig:abstraction-barrier}有理数における抽象化の壁}
 \end{figure}
 
 ここでは抽象化のレベルが４つで分かれている. 最も上のレイヤは分数を扱うプログラムが使うもので,
@@ -16,3 +16,4 @@
 そのレイヤ分けの主な利点はプログラムの保守性と柔軟性の向上である.
 下のレイヤの実装に依存しないので, データをどう表現するかが変わらない限り,
 実装が変わっても影響が受けない.
+図\ref{fig:abstraction-barrier}で有理数における抽象化の壁の例を示す.
