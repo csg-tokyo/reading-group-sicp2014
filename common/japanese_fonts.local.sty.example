@@ -1,0 +1,10 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{japanese_fonts}
+  [2012/04/18 v0.01 LaTeX package for japanese with xelatex]
+
+\RequirePackage{xltxtra}
+
+% Fonts
+\setmainfont[RawFeature=-palt,BoldFont=TakaoPGothic]{TakaoPMincho}
+\setsansfont[RawFeature=-palt]{TakaoPGothic}
+\setmonofont[RawFeature=-palt]{FreeMono}

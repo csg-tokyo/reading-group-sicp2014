@@ -23,3 +23,6 @@ auto/
 *.fdb_latexmk
 *.fls
 
+# local settings
+*.local.sty
+

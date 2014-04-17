@@ -2,11 +2,8 @@
 \ProvidesPackage{japanese_settings}
   [2012/04/18 v0.01 LaTeX package for japanese with xelatex]
 
-\RequirePackage{xltxtra}
-% Fonts
-\setmainfont[RawFeature=-palt,BoldFont=TakaoPGothic]{TakaoPMincho}
-\setsansfont[RawFeature=-palt]{TakaoPGothic}
-\setmonofont[RawFeature=-palt]{FreeMono}
+\RequirePackage{japanese_fonts.local}
+
 % Japanese lineskip
 \XeTeXlinebreaklocale "ja"
 \XeTeXlinebreakskip=0pt plus 1pt minus 0.1pt
