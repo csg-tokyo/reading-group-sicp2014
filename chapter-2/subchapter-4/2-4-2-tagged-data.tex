@@ -12,7 +12,7 @@ Schemeでは, データのリストに記号を追加すること
 コンストラクタを用いて複素数を作る時に次のように
 タイプをつける.
 
-\begin{lstlisting}[basicstyle=\footnotesize]
+\begin{lstlisting}[basicstyle=\scriptsize]
 (define (make-from-mag-ang-rectangular r a)
   (attach-tag 'rectangular
               (cons (* r (cos a)) (* r (sin a)))))
@@ -20,7 +20,7 @@ Schemeでは, データのリストに記号を追加すること
 
 セレクタでタグを使ってデータを取り出す.
 
-\begin{lstlisting}[basicstyle=\footnotesize]
+\begin{lstlisting}[basicstyle=\scriptsize]
 (define (real-part z)
   (cond ((rectangular? z)
          (real-part-rectangular (contents z)))

@@ -8,7 +8,7 @@
 その対策として, データ適従プログラミングを用いることができる.
 型と操作を以下の２次元配列として見ることができる.
 
-\begin{table}[h]
+\begin{table}[!h]
   \centering
   \begin{tabular}{c|c|c}
     \multicolumn{1}{c}{} & \multicolumn{2}{c}{\hspace{-1cm}変数型}\\
@@ -20,3 +20,90 @@
     \ttfamily{angle} & \ttfamily{angle-polar} & \ttfamily{angle-rectangular}
   \end{tabular}
 \end{table}
+
+この配列に関数を追加するための\lstinline{put}と関数を取り出すための
+\lstinline{put}という関数があるとすると, 直交座標の内部実装を
+次のように追加できる.
+
+\begin{lstlisting}[basicstyle=\scriptsize]
+(define (install-rectangular-package)
+  ;; internal procedures
+  (define (real-part z) (car z))
+  (define (imag-part z) (cdr z))
+  (define (make-from-real-imag x y) (cons x y))
+  (define (magnitude z)
+    (sqrt (+ (square (real-part z))
+             (square (imag-part z)))))
+  (define (angle z)
+    (atan (imag-part z) (real-part z)))
+  (define (make-from-mag-ang r a)
+    (cons (* r (cos a)) (* r (sin a))))
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'rectangular x))
+  (put 'real-part '(rectangular) real-part)
+  (put 'imag-part '(rectangular) imag-part)
+  (put 'magnitude '(rectangular) magnitude)
+  (put 'angle '(rectangular) angle)
+  (put 'make-from-real-imag 'rectangular
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'rectangular
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+\end{lstlisting}
+
+同じように名前衝突なく極座標の表現も追加できる.
+以上を用いるために, コンストラクタとセレクタを
+次のように定義することができる.
+
+\begin{lstlisting}[basicstyle=\scriptsize]
+(define (apply-generic op . args)
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc(apply proc (map contents args))
+          (error
+           "No method for these types -- APPLY-GENERIC"
+           (list op type-tags))))))
+
+(define (real-part z) (apply-generic 'real-part z))
+(define (imag-part z) (apply-generic 'imag-part z))
+(define (magnitude z) (apply-generic 'magnitude z))
+(define (angle z) (apply-generic 'angle z))
+
+(define (make-from-real-imag x y)
+  ((get 'make-from-real-imag 'rectangular) x y))
+(define (make-from-mag-ang r a)
+((get 'make-from-mag-ang 'polar) r a))
+\end{lstlisting}
+
+ここでは, 一般的なセレクタ作って, \lstinline{apply-generic}を
+使うことによって既存の関数を動的に用いる. この方法では,
+動的に新しい表現を追加することもできるし, 名前の衝突も
+起こることがない. 以上のアプローチを用いるとプログラムに
+より単純に新しいモジュールを追加することができる.
+
+\paragraph{メッセージパッシング}
+以上では, それぞれの操作は表の１行になっており,
+型からふさわしい関数を取り出すような形式になっている.
+
+その代わりに, 次のようにオブジェクトデータに機能を持たせ,
+受け取った関数名によって挙動を決める. その方法は
+メッセージパッシングと呼ぶ.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (make-from-real-imag x y)
+  (define (dispatch op)
+    (cond ((eq? op 'real-part) x)
+          ((eq? op 'imag-part) y)
+          ((eq? op 'magnitude)
+           (sqrt (+ (square x) (square y))))
+          ((eq? op 'angle) (atan y x))
+          (else
+           (error "Unknown op -- MAKE-FROM-REAL-IMAG" op))))
+  dispatch)
+\end{lstlisting}
+
+以上では, \lstinline{make-from-real-imag}は関数を返し,
+その関数は渡された「メッセージ」によって結果を返す.
+
+章3から, メッセージパッシングはシミュレーションプログラムに
+おいてどう役に立つのかについてより詳しく説明する.
