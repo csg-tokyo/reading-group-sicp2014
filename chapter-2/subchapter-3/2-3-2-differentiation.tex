@@ -1,0 +1,62 @@
+\subsubsection{記号微分}
+%
+記号を扱う例として, $ax^2 + bx + c$を$2ax + b$に
+変えるような記号微分を行うプログラムを紹介する.
+
+記号微分は以下の４つのルールで定義できる.
+
+\begin{align*}
+  \frac{\mathrm{d}c}{\mathrm{d}x} &= 0 \hspace{5mm} \text{$c$が定数もしくは$x$以外の変数} &
+  %
+  \frac{\mathrm{d}x}{\mathrm{d}x} &= 1\\
+  %
+  \frac{\mathrm{d}(u + v)}{\mathrm{d}x} &=
+    \frac{\mathrm{d}u}{\mathrm{d}x} + \frac{\mathrm{d}v}{\mathrm{d}x} &
+  %
+  \frac{\mathrm{d}(uv)}{\mathrm{d}x} &=
+    u\left(\frac{\mathrm{d}v}{\mathrm{d}x} \right) +
+    v\left(\frac{\mathrm{d}u}{\mathrm{d}x} \right)
+\end{align*}
+
+以上の定義に従って実装するには, 単純式について,
+変数であるかどうかと２つの変数について同じ変数であるかどう分かれば良い.
+複合式について, 和か積の判別, 和と式の作成, 和と式からオペランドを
+取り出せれば, 定義通りに実装可能である.
+
+変数を記号として表すと, 単純式のための関数次のように定義できる.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (variable? x) (symbol? x))
+(define (same-variable? v1 v2)
+  (and (variable? v1) (variable? v2) (eq? v1 v2)))
+\end{lstlisting}
+
+足し算と掛け算を次のように表すと,
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+'(+ x 1)
+'(* x 1)
+\end{lstlisting}
+
+\lstinline{ca(dd)r}で要素を取り出し, 記号を比べることで
+積と和の判定などができる.
+
+最終的に次のような実装を考えられる.
+
+\begin{lstlisting}[basicstyle=\scriptsize]
+(define (deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp)
+         (if (same-variable? exp var) 1 0))
+        ((sum? exp)
+         (make-sum (deriv (addend exp) var)
+                   (deriv (augend exp) var)))
+        ((product? exp)
+         (make-sum
+          (make-product (multiplier exp)
+                        (deriv (multiplicand exp) var))
+          (make-product (deriv (multiplier exp) var)
+                        (multiplicand exp))))
+        (else
+         (error "unknown expression type -- DERIV" exp))))
+\end{lstlisting}
