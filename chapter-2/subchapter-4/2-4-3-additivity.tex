@@ -1,0 +1,22 @@
+\subsubsection{データ適従プログラミングと付加性}
+以上用いたのはタイプ別処理で, 効率よくモジュール化する
+ために良い方法であるが, 以上の実装では, 予めすべての
+表現を知っておかなければいけないので, 付加性に欠けている.
+また, 同じプログラムで２つの関数は同じ名前を持ってはいけないので,
+名前が被らないように変える必要が出てしまう.
+
+その対策として, データ適従プログラミングを用いることができる.
+型と操作を以下の２次元配列として見ることができる.
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{c|c|c}
+    \multicolumn{1}{c}{} & \multicolumn{2}{c}{\hspace{-1cm}変数型}\\
+    \multicolumn{1}{c}{} & 直交座標表現 & 極座標表現\\
+    \cline{2-3}
+    \ttfamily{real-part} & \ttfamily{real-part-polar} & \ttfamily{real-part-rectangular}\\
+    \ttfamily{imag-part} & \ttfamily{imag-part-polar} & \ttfamily{imag-part-rectangular}\\
+    \ttfamily{magnitude} & \ttfamily{magnitude-polar} & \ttfamily{magnitude-rectangular}\\
+    \ttfamily{angle} & \ttfamily{angle-polar} & \ttfamily{angle-rectangular}
+  \end{tabular}
+\end{table}

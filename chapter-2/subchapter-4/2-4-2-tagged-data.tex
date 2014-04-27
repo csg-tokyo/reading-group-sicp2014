@@ -1,0 +1,33 @@
+\subsubsection{タイプタグ}
+以上の例では, どの実装を選んでも四則演算の関数
+が使えることがわかったが, 実装を実際選ぶ必要が
+なくて, 直交座標の表現も極座標の表現も共存させる
+ことができる. ただし, 同じプログラムで共存させる
+ために, どの表現になっているかが分かる必要がある.
+そのために, 簡単な方法としてはデータにタグをつけて,
+どの形式で入ってるかをデータと一緒に保存しておく.
+Schemeでは, データのリストに記号を追加すること
+によって簡単に実現できる.
+
+コンストラクタを用いて複素数を作る時に次のように
+タイプをつける.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (make-from-mag-ang-rectangular r a)
+  (attach-tag 'rectangular
+              (cons (* r (cos a)) (* r (sin a)))))
+\end{lstlisting}
+
+セレクタでタグを使ってデータを取り出す.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (real-part z)
+  (cond ((rectangular? z)
+         (real-part-rectangular (contents z)))
+        ((polar? z)
+         (real-part-polar (contents z)))
+        (else (error "Unknown type -- REAL-PART" z))))
+\end{lstlisting}
+
+そうすることによって, 両方の表現方法が同じプログラムで
+共存できる.

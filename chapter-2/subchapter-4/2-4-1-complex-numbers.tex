@@ -1,1 +1,50 @@
 \subsubsection{複素数の表現}
+複素数は主な２つの方法で表現する.
+
+\begin{itemize}
+  \item 直交座標
+    \[ z = x + iy \]
+  \item 極座標
+    \[ z = re^{i\phi}\]
+\end{itemize}
+
+この２つの表現から, 複素数の足し算と掛け算を次のように書くことができる.
+\begin{align*}
+  z_1 + z_2 &= (x_1 + x_2) + (y_1 + y_2)i\\
+  z_1 \cdot z_2 &= (r_1 \cdot r_2) e^{i(\phi_1 + \phi_2)}
+\end{align*}
+
+\lstinline{real-part} ($x$), \lstinline{image-part} ($y$),
+\lstinline{magnitude} ($r$), \lstinline{angle} ($\phi$)
+というセレクタと, \\ \lstinline{make-from-real-image}と
+\lstinline{make-from-mag-ang}というコンストラクタが
+あったとすると, ある複素数$z$に対して
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(make-from-real-imag (real-part z) (imag-part z))
+(make-from-mag-ang (magnitude z) (angle z))
+\end{lstlisting}
+
+は等しい複素数を返す.
+
+そのコンストラクタとセレクタを用いて複素数の四則演算
+を次のように定義できる.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (add-complex z1 z2)
+  (make-from-real-imag (+ (real-part z1) (real-part z2))
+                       (+ (imag-part z1) (imag-part z2))))
+(define (sub-complex z1 z2)
+  (make-from-real-imag (- (real-part z1) (real-part z2))
+                       (- (imag-part z1) (imag-part z2))))
+(define (mul-complex z1 z2)
+  (make-from-mag-ang (* (magnitude z1) (magnitude z2))
+                     (+ (angle z1) (angle z2))))
+(define (div-complex z1 z2)
+  (make-from-mag-ang (/ (magnitude z1) (magnitude z2))
+                     (- (angle z1) (angle z2))))
+\end{lstlisting}
+%
+内部の複素数の表現方法として直交座標を選んでも極座標を選んでも,
+セレクタとコンストラクタが正しく定義されていれば,
+どちらでも以上の関数を使うことができる.
