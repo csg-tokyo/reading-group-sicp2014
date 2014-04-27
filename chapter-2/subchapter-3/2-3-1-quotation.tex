@@ -1,0 +1,32 @@
+\subsubsection{引用}
+%
+複合データに次のようなデータを表したいとする.
+%
+\begin{lstlisting}[basicstyle=\footnotesize,title=任意の記号の入ったデータ]
+(a b c d)
+((Norah 12) (Molly 9) (Anna 7))
+\end{lstlisting}
+%
+しかしながら, \lstinline{(list a b)}と書くと,
+\lstinline{a}と\lstinline{b}の
+値が入っているリストになってしまう. 従って, 記号を扱うために,
+データを引用できるような仕組みが必要である.
+
+自然言語では, 引用を行う時に「"」で囲むことが多いが,
+Schemeでは, 引用したい記号の前に\lstinline{`}と書くと,
+次のオブジェクトが引用される. 空白や括弧を用いるため,
+括弧閉じる必要性もない.
+
+\begin{lstlisting}[basicstyle=\footnotesize,title=記号データの例]
+(define a 1)
+(define b 2)
+
+(list a b)
+=> (1 2)
+
+(list 'a 'b)
+=> (a b)
+
+(car '(a b c))
+=> a
+\end{lstlisting}
