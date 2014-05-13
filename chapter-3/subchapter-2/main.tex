@@ -1,3 +1,63 @@
 \setcounter{section}{3}
 \setcounter{subsection}{1}
 \subsection{実行環境モデル}
+プロシージャについて考え始めた時に, 置換モデルを導入した.
+そのモデルでは, プロシージャを適用するために, プロシージャの中身での
+仮引数の出現をその引数の値に変えることで実行することができる.
+もう一度例を挙げると
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (square x) (* x x))
+\end{lstlisting}
+\noindent
+という定義で
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(square 2)
+\end{lstlisting}
+\noindent
+を実行しようと思えば, \lstinline{square}の中の\lstinline{x}を
+\lstinline{2}に変えれば良い. なので, \lstinline{(* 2 2)}
+を実行することになる.
+
+しかしながら, 代入の概念が入ってしまうと, 以上のモデルが成り立たなくなる.
+例えば,
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (foo x)
+  (set! x 1)
+  (+ x 1))
+\end{lstlisting}
+
+のようなプロシージャについて考えると, \lstinline{(foo 5)}で呼びだした時に,
+置換モデルを用いると, \lstinline{x}が\lstinline{5}に置換されて,
+\lstinline{(set! 5 1)}が実行できたとしても, \lstinline{6}という誤った結果に
+なってしまう.
+
+問題点としては, 変数は単なる値ではなく, 値が保存されている場所を指していると
+考えられる. 新しい実行モデルでは, 値が保存される場所は「環境」という構造を持って
+表す.
+
+環境はフレームのシーケンスであり, フレームはバインディングのテープルである.
+ここでは, バインディングは変数名とその値を結ぶものである.
+フレームはグローバルのもの以外は自分の実行環境のポインタを持つ. 変数の値は
+一番最初のフレームでのバインディングで決まる. どのフレームにもバインディングが
+なければ, 値がバインドされていないという.
+
+\begin{figure}[ht]
+  \centering
+  \includegraphics[height=5cm,width=5cm]{imgs/environment_example.png}
+  \caption{\label{fig:env-example}実行環境の構造}
+\end{figure}
+
+例えば, 図\ref{fig:env-example}では, フレームは3つ存在する.
+グローバル環境で\lstinline{x}の値としてフレーム\lstinline{I}
+が採用されるので\lstinline{3}になるが, \lstinline{A}環境で実行すると,
+フレーム\lstinline{II}の値が採用され, \lstinline{x}の値が\lstinline{7}になる.
+同じく, \lstinline{y}をグローバル環境で実行すると値が\lstinline{5}になるが,
+\lstinline{B}環境で実行すると, 値が\lstinline{2}になる.
+
+実行する時に, 環境によって式がどう評価されるのかが決まるので, 式そのものだけでは
+意味を持つではなく, ある環境で式が意味を持つと言える.
+%
+\input{chapter-3/subchapter-2/3-2-1-evaluation-rules}
