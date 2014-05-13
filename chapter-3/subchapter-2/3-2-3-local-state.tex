@@ -1,0 +1,26 @@
+\setcounter{subsubsection}{2}
+\subsubsection{フレームとローカルステート}
+環境モデルを用いると, プロシージャ実行する時にそのプロシージャが
+フレームを持つので, そのフレームを用いてローカルの状態を表すことができる.
+例えば, 以下の例について考える.
+
+\begin{lstlisting}[basicstyle=\footnotesize,caption=]
+(define (make-withdraw balance)
+  (lambda (amount)
+    (if (>= balance amount)
+        (begin (set! balance (- balance amount))
+               balance)
+        "Insufficient funds")))
+(define W1 (make-withdraw 100))
+(define W2 (make-withdraw 200))
+(W1 20) => 80
+(W2 30) => 170
+\end{lstlisting}
+
+ここで, \lstinline{make-withdraw}を評価する時に,
+新しいフレームが作られて, そのフレームでは\lstinline{balance}が
+実引数にバインドされる. その環境の中で, \lstinline{lambda}式が
+実行されるので, 作られるプロシージャの環境において, \lstinline{balance}
+の値が実引数の値になる. また, \lstinline{make-withdraw}を呼び出すたびに,
+同じプロセスでフレームが作られるので, \lstinline{balance}の値は
+呼び出しごとにローカルステートとなる.
