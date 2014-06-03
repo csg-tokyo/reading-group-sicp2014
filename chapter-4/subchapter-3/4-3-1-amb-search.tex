@@ -1,0 +1,32 @@
+\subsubsection{Ambと探索}
+非決定性演算をサポートするように, Schemeを\lstinline{amb}という新しい
+スペシャルフォームで拡張する.
+
+\lstinline{amb}は{\tt (amb $<e_1> <e_2> \cdots <e_n>$)}に対して
+$n$個の値の中から任意の$<e_i>$を返す. 例えば,
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(list (amb 1 2 3) (amb 'a 'b))
+\end{lstlisting}
+
+は
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(1 a) (1 b) (2 a) (2 b) (3 a) (3 b)
+\end{lstlisting}
+
+のどれかの値を取りうる. 逆に, 引数の取らない\lstinline{amb}は
+「失敗」だと考えられる. これを用いて, \lstinline{require}と\lstinline{an-element-of}を
+次のように定義できる.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (require p)
+  (if (not p) (amb)))
+(define (an-element-of items)
+  (require (not (null? items)))
+  (amb (car items) (an-element-of (cdr items))))
+\end{lstlisting}
+
+\lstinline{amb}の実装としてはいくつか考えられるが, 今回は実装としては,
+あり得る１つ目の値を選び, その値でテストを行い, 失敗の場合は前の選択に戻り次の値
+で試す. このような探索は深さ優先探索という.

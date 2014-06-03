@@ -1,0 +1,42 @@
+\subsection{非決定性演算}
+%
+この節では, non deterministic（非決定性演算）という
+プログラミングパラダイムを紹介する. これのパラダイムを
+実装することによって, 自動探索ができるようになる.
+
+非決定性演算は生成して値をテストするようなアプリケーションでは
+便利である. 例えば, ２つの整数のリストから１つずつの整数を足した時に
+素数になるような値を探す問題について考える. 今までの方法では,
+すべてのペアを生成してそのフィルタを掛けるような実装が考えられる.
+
+非決定性演算を用いると, 考え方が大きく違ってくる. ある結果に対して条件を
+付けることができると考えると, 次のようなコードを考えられる.
+
+\begin{lstlisting}[basicstyle=\footnotesize,caption=]
+(define (prime-sum-pair list1 list2)
+(let ((a (an-element-of list1))
+      (b (an-element-of list2)))
+  (require (prime? (+ a b)))
+  (list a b)))
+\end{lstlisting}
+
+重要な概念としては, ２つ以上の結果が存在しうることである. 例えば,
+\lstinline{an-element-of}は渡されたリストの任意の要素を返すことができる.
+内部の評価機が自動的にあり得る値を選んでくれる.
+
+これから実装する非決定性演算評価機はambと呼ぶ. その名前はambiguousという意味で
+\lstinline{amb}という新しいスペシャルフォームを導入するからである.
+amb評価機と以上のように定義された\lstinline{prime-sum-pair}で
+次のような結果を得ることができる.
+
+\begin{lstlisting}[basicstyle=\footnotesize,caption=]
+(prime-sum-pair '(1 3 5 8) '(20 35 110))
+(3 20)
+\end{lstlisting}
+
+また, ユーザが\lstinline{try-again}を打つことによって, 次の解が
+表示される.
+%
+\input{chapter-4/subchapter-3/4-3-1-amb-search}
+%
+\input{chapter-4/subchapter-3/4-3-3-amb-evaluator}
