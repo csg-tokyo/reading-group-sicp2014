@@ -1,0 +1,27 @@
+\input{common/headers}
+%
+\author{Daniel Perez}
+\sicptitle{4.2と4.3}
+%
+\begin{document}
+\maketitle
+%
+\section*{概要}
+%
+前の章では, Lispプログラムの評価機を作った. 今回は, その評価機のいくつかの点を
+変更して, 普通のLispの仕様を２つの方法で拡張・変更する.
+その２つの方法について説明する.
+
+１つ目の方法は, 評価順番を変える方法である. 普通のSchemeは適用順であるが,
+今回遅延評価という概念を取り入れることによって, 正規順序評価に変える方法を紹介する.
+
+もう１つの方法では, 普通のSchemeからもう少し離れて, 評価機に非決定性演算を追加する.
+非決定性演算は評価機で自動的に探索を行うような機能で, 後半の部分ではその機能と
+実装方法について説明する.
+
+
+\input{chapter-4/main}
+%
+% \input{chapter-2/subchapter-1/main}
+%
+\end{document}

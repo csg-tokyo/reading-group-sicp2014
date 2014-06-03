@@ -1,0 +1,87 @@
+\subsubsection{遅延評価を用いたインタープリタ}
+遅延評価に変えるには, プロシージャを適用する時にどの
+引数を評価する必要があり, どの引数はまだ評価しないでいいのかを
+判定する必要がある. そして, まだ評価しない引数については,
+あとで評価するための情報を持ったthunkに変える. また,
+そのthunkの値が必要になった時は, thunkを評価することは
+forcingという. 最後に, インタープリターを作る時に
+一度評価したthunkの値を保存して, 次にそのthunkを評価する時は,
+保存した値を使うか, もう一度評価するかを決める必要がある.
+今回は最初に評価した結果を保存し使いまわす設計を選ぶ.
+
+\paragraph{インタープリタの変更}
+遅延評価の場合は, 元々の評価方法と主な違いは適用の扱いにある.
+
+元々の評価方法では, 次のコードを用いて適用を処理していた.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+((application? exp)
+   (apply (eval (operator exp) env)
+          (list-of-values (operands exp) env)))
+\end{lstlisting}
+
+以上の実装では, プロシージャを適用する前に引数が評価されるので,
+変える必要がある.
+
+\begin{lstlisting}[basicstyle=\footnotesize,caption=]
+((application? exp)
+ (apply (actual-value (operator exp) env)
+        (operands exp)
+        env))
+\end{lstlisting}
+変更としては, オペレータに対して\lstinline{eval}の代わりに
+thunkを考慮してくれる\lstinline{actual-value}を呼び出し,
+オペランドに対して, 評価するための\lstinline{list-of-values}を適用しなくなる.
+
+他の重要な変更追加を以下に述べる.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(define (actual-value exp env)
+  (force-it (eval exp env)))
+
+(define (force-it obj)
+  (cond ((thunk? obj)
+         (let ((result (actual-value
+                        (thunk-exp obj)
+                        (thunk-env obj))))
+           (set-car! obj 'evaluated-thunk)
+           (set-car! (cdr obj) result)
+           (set-cdr! (cdr obj) '())
+           result))
+        ((evaluated-thunk? obj)
+         (thunk-value obj))
+        (else obj)))
+
+(define (delay-it exp env)
+  (list 'thunk exp env))
+
+(define (apply procedure arguments env)
+  (cond ((primitive-procedure? procedure)
+         (apply-primitive-procedure
+          procedure
+          (list-of-arg-values arguments env)))
+        ((compound-procedure? procedure)
+         (eval-sequence
+          (procedure-body procedure)
+          (extend-environment
+           (procedure-parameters procedure)
+           (list-of-delayed-args arguments env)
+           (procedure-environment procedure))))
+        (else
+         (error
+          "Unknown procedure type -- APPLY" procedure))))
+\end{lstlisting}
+
+以上の実装では, thunkをリストとして表し, 評価されていないものに関して,
+\lstinline{thunk}というラベルをつけて, 評価されたものに関して,
+\lstinline{evaluated-thunk}というラベルをつける.
+値を評価する時に, thunkでない場合はもう評価された値だと見てそのまま返し,
+thunkの場合は評価済みかどうかを確認し, すでに評価されていれば値を再利用し,
+まだ評価されていなければ, 評価してラベルを変え, 値を保存する.
+最後に, \lstinline{apply}プロシージャでは, 入る\lstinline{arguments}は
+評価されてない前提になるので, そこでケース２つで分ける.
+\lstinline{primitive-procedure}の場合は, オペランドの値がすぐ必要になるので,
+\lstinline{list-of-arg-values}でそれぞれのオペランドをを評価する.
+\lstinline{compound-procedure}の場合は, 値がすぐに必要にならないので,
+評価をせずに, \lstinline{list-of-delayed-args}を用いてそれぞれの
+オペランドに\lstinline{delay-it}を適用してthunkのリストに変える.
