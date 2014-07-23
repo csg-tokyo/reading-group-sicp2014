@@ -1,0 +1,14 @@
+\subsection{明示的制御評価機}
+4.1章では, Schemeのインタープリタをどうすれば\lstinline{eval}と%
+\lstinline{apply}で表すのかについて説明した. ここで実装する%
+明示的制御評価機で, 評価における引数の管理などをどのようにレジスタ%
+とスタックで表現できるかについて説明する.
+
+今回実装する評価機は, スタックと７つのレジスタを持つ. レジスタは
+\lstinline{exp} (評価される式), \lstinline{env} (評価の環境),
+\lstinline{val} (評価の結果), \lstinline{continue} (再帰のため),
+\lstinline{proc}, \lstinline{arg1}, \lstinline{unev} (コンビネーションの評価).
+%
+\input{chapter-5/subchapter-4/5-4-1-core-evaluator}
+%
+\input{chapter-5/subchapter-4/5-4-2-tail-recursion}

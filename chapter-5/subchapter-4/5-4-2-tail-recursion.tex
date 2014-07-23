@@ -1,0 +1,27 @@
+\subsubsection{シーケンスの評価と末尾再帰}
+今回の評価機の\lstinline{ev-sequence}は4.1の評価機%
+の\lstinline{eval-sequence}に相当するもので,
+プロシジャーのボディと\lstinline{begin}で定義されたような%
+シーケンスを評価する. 実装は次のようにできる.
+
+\begin{lstlisting}[basicstyle=\footnotesize,caption=]
+ev-sequence
+  (assign exp (op first-exp) (reg unev))
+  (test (op last-exp?) (reg unev))
+  (branch (label ev-sequence-last-exp))
+  (save unev)
+  (save env)
+  (assign continue (label ev-sequence-continue))
+  (goto (label eval-dispatch))
+ev-sequence-continue
+  (restore env)
+  (restore unev)
+  (assign unev (op rest-exps) (reg unev))
+  (goto (label ev-sequence))
+ev-sequence-last-exp
+  (restore continue)
+  (goto (label eval-dispatch))
+\end{lstlisting}
+
+このシーケンスにこれ以上式が残っていない時は, \lstinline{continue}を%
+スタックから戻し, \lstinline{eval-dispatch}に飛ぶ.

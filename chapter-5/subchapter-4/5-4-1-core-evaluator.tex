@@ -1,0 +1,68 @@
+\subsubsection{明示制御評価機のコア}
+評価機の中心は\lstinline{eval-dispatch}で始まる%
+命令のシーケンスである. 4.1の\lstinline{eval}プロシジャー%
+に相当する部分になっている. そこで, \lstinline{exp}に入っている%
+式を\lstinline{env}の環境で実行し, 結果を\lstinline{val}に%
+保存する. 実装は次のようにできる.
+
+\begin{lstlisting}[basicstyle=\footnotesize,caption=]
+eval-dispatch
+  (test (op self-evaluating?) (reg exp))
+  (branch (label ev-self-eval))
+  (test (op variable?) (reg exp))
+  (branch (label ev-variable))
+  (test (op quoted?) (reg exp))
+  (branch (label ev-quoted))
+  (test (op assignment?) (reg exp))
+  (branch (label ev-assignment))
+  (test (op definition?) (reg exp))
+  (branch (label ev-definition))
+  (test (op if?) (reg exp))
+  (branch (label ev-if))
+  (test (op lambda?) (reg exp))
+  (branch (label ev-lambda))
+  (test (op begin?) (reg exp))
+  (branch (label ev-begin))
+  (test (op application?) (reg exp))
+  (branch (label ev-application))
+  (goto (label unknown-expression-type))
+\end{lstlisting}
+
+\paragraph{単純式の評価}
+サブ式のない式の場合, 結果を\lstinline{val}に入れて, あとは%
+\lstinline{continue}に入っているエントリーポイントで%
+実行を続ける. 例えば, \lstinline{variable}の場合は次のように%
+実装できる.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+ev-variable
+  (assign val (op lookup-variable-value) (reg exp) (reg env))
+  (goto (reg continue))
+\end{lstlisting}
+%
+\paragraph{プロシジャー適用の評価}
+\lstinline{eval}プロシジャーでは, オペレータを評価し,
+再帰的にオペランドを評価していき,
+結果を\lstinline{apply}に渡すことによって評価していた.
+今回も同じアプローチを使い, 再帰は\lstinline{goto}命令で
+表現し, 値が必要なレジスタの値を一時的に保存するには, スタックを用いる.
+オペレータはの評価は次のように実装できる.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+ev-application
+  (save continue)
+  (save env)
+  (assign unev (op operands) (reg exp))
+  (save unev)
+  (assign exp (op operator) (reg exp))
+  (assign continue (label ev-appl-did-operator))
+  (goto (label eval-dispatch))
+ev-appl-did-operator
+  (restore unev) ; the operands
+  (restore env)
+  (assign argl (op empty-arglist))
+  (assign proc (reg val)) ; the operator
+  (test (op no-operands?) (reg unev))
+  (branch (label apply-dispatch))
+  (save proc)
+\end{lstlisting}

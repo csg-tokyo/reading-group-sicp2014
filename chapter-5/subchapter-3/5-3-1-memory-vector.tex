@@ -1,0 +1,71 @@
+\subsubsection{ベクタとしてのメモリ}
+コンピュータのメモリはユーニックなアドレスを持つブロックで分かれている.
+基本的にブロックに値を入れるための操作とブロックからその値を取り出す%
+ための操作が準備されていることが多い. また, メモリのアドレスも
+データとして扱われていて, そのアドレスで演算などを行うことができる.
+
+メモリを表現するために, ベクターというデータ構造を用いる.
+ベクターはコンパウンドデータで, 添字を用いて定数時間で要素を%
+取り出せるようになっている. メモリの操作を表すために,
+次の２つのプロシジャを用いる.
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(vector-ref <vector> <n>)
+(vector-set! <vector> <n> <value)
+\end{lstlisting}
+\paragraph{Lispのデータ構造の表現}
+ベクターを用いてリスト構造に使うペアを表すことができる.
+メモリが\lstinline{the-cars}と\lstinline{the-cdrs}という２つの%
+ベクターで分かれているとする. ペアはその２つのベクターの添字として%
+表すことができる. また, 数字や記号を表す方法も必要となる. そのために,
+型のついたポインターを用いることができる. 例えば, \lstinline{n4}は
+4という整数を表し, \lstinline{p5}はインデックス5のペアを表す. また,
+\lstinline{e0}は空のリストを表す.
+%
+\begin{figure}[h]
+  \centering
+  \includegraphics[height=6cm,width=12cm]{imgs/box-and-pointer.png}
+\end{figure}
+%
+\paragraph{リストの基本操作}
+操作を実装するために, \lstinline{the-cars}と\lstinline{the-cdrs}レジスターを用いる.
+また, \lstinline{vector-ref}と\lstinline{vector-set!}という操作が使えることを%
+前提とする. それを用いて,
+%
+\begin{lstlisting}[basicstyle=\footnotesize]
+(assign <reg 1 > (op car) (reg <reg 2 >))
+(assign <reg 1 > (op cdr) (reg <reg 2 >))
+\end{lstlisting}
+%
+を次のように実装できる.
+%
+\begin{lstlisting}[basicstyle=\footnotesize]
+(assign <reg 1 > (op vector-ref) (reg the-cars) (reg <reg 2 >))
+(assign <reg 1 > (op vector-ref) (reg the-cdrs) (reg <reg 2 >))
+\end{lstlisting}
+
+\lstinline{set-car!}と\lstinline{set-cdr!}についても同じく実装できる.
+
+また, 次に使える添字を常に指している\lstinline{free}というレジスターが%
+存在するとする. それらを用いて,
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(assign <reg 1 > (op cons) (reg <reg 2 >) (reg <reg 3 >))
+\end{lstlisting}
+を次のように実装できる.
+\begin{lstlisting}[basicstyle=\footnotesize]
+(perform
+  (op vector-set!) (reg the-cars) (reg free) (reg <reg 2 >))
+(perform
+  (op vector-set!) (reg the-cdrs) (reg free) (reg <reg 3 >))
+(assign <reg 1 > (reg free))
+(assign free (op +) (reg free) (const 1))
+\end{lstlisting}
+
+また, \lstinline{eq?}を次のように
+
+\begin{lstlisting}[basicstyle=\footnotesize]
+(op eq?) (reg <reg 1 >) (reg <reg 2 >)
+\end{lstlisting}
+
+で実装できる.
